@@ -1,0 +1,15 @@
+models:
+  - name: KNN
+    module: src.model.knn
+    function: train_knn
+  - name: KNN
+    module: src.train.predict_knn
+    function: evaluate_knn
+
+  - name: RF
+    module: src.model.random_forest
+    function: train_and_predict_rf
+
+  - name: DT
+    module: src.model.decision_tree
+    function: train_and_predict_dt

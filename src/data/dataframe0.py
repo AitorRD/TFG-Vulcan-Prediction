@@ -1,4 +1,4 @@
-# %%
+
 import os
 import pandas as pd
 
@@ -28,11 +28,8 @@ for archivo in os.listdir(directorio):
 medias_df2 = pd.DataFrame.from_dict(medias_por_csv2, orient='index')
 desv_df = pd.DataFrame.from_dict(desv_por_csv, orient='index')
 
-
-# %%
 print(medias_df2)
 
-# %%
 #BOXPLOT DE MEDIAS Y DESV
 import matplotlib.pyplot as plt
 
@@ -54,7 +51,6 @@ create_boxplot(desv_df, 'Boxplot de las desviaciones estándar de cada sensor')
 plt.savefig('graphs/boxplot_desviaciones.png')
 plt.show()
 
-# %%
 #BOXPLOT SEABORN
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -77,7 +73,6 @@ create_boxplot_seaborn(desv_df, 'Boxplot de las desviaciones estándar de cada s
 plt.savefig('graphs/boxplot_desviaciones_seaborn.png')
 plt.show()
 
-# %%
 import seaborn as sns
 import matplotlib.pyplot as plt
 
@@ -95,7 +90,6 @@ plt.ylabel('Valor')
 plt.tight_layout()
 plt.show()
 
-# %%
 #CONCATENAR DESV Y MEDIAS
 num_sensores = 10
 medias_df2.columns = [f"media_sensor_{i+1}" for i in range(num_sensores)]
@@ -105,7 +99,6 @@ result = pd.concat([medias_df2, desv_df], axis=1)
 result.index.name = 'ID'
 print(result)
 
-# %%
 #AÑADIMOS EL TTE
 train_df = pd.read_csv('kaggle/input/train.csv')
 
@@ -116,7 +109,6 @@ dataframe['time_to_eruption'] = dataframe['time_to_eruption'].where(~dataframe['
 print(dataframe)
 dataframe.to_csv('dataframe.csv', index=False)
 
-# %%
 #GUARDAR EL CSV DATAFRAME DE TRAIN
 df = pd.read_csv("dataframe.csv")
 df.set_index('segment_id', inplace=True, drop=False)
@@ -128,7 +120,6 @@ if 'segment_id' in df.columns:
 
 df.to_csv("dataframe_mod.csv")
 
-# %%
 #BOXPLOT KNN
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -143,7 +134,6 @@ plt.ylabel('TTE')
 plt.grid(True)
 plt.show()
 
-# %%
 #TTE BOXPLOT SEABORN
 import pandas as pd
 import seaborn as sns
