@@ -2,6 +2,9 @@ models:
   - name: KNN
     module: src.model.knn
     function: train_knn
+    params:
+      k: 5
+      
   - name: KNN
     module: src.train.predict_knn
     function: evaluate_knn

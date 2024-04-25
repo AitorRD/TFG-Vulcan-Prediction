@@ -21,17 +21,14 @@ def process_data(directory, train_file, output_directory):
     df_global['time_to_eruption'] = [time_to_eruption_dict.get(segment_id) for segment_id in df_global.index]
 
     output_file = 'dataframe.csv'
-    index = 1
-    while os.path.exists(os.path.join(output_directory, output_file)):
-        output_file = f'dataframe{index}.csv'
-        index += 1
-
     output_path = os.path.join(output_directory, output_file)
+
+    # Guardar el DataFrame en el archivo CSV y reemplazar si ya existe
     df_global.to_csv(output_path, index=True)
 
-directory = 'prueba'
-train_file = 'kaggle/input/train.csv'
-output_directory = 'processed'
+directory = 'src/data/prueba'
+train_file = 'src/data/kaggle/input/train.csv'
+output_directory = 'src/data/processed'
 process_data(directory, train_file, output_directory)
 
 
