@@ -1,5 +1,23 @@
 import pandas as pd
+import numpy as np
 import os
+
+def calculate_stats(data):
+    stats = {}
+    stats['max_global'] = data.max().max()
+    stats['min_global'] = data.min().min()
+    stats['zero_crossings'] = np.count_nonzero(np.diff(np.sign(data), axis=1), axis=1).sum()
+    window_size = 600
+    num_windows = len(data) // window_size
+    for i in range(num_windows):
+        window_data = data.iloc[i * window_size : (i + 1) * window_size]
+        stats[f'media_global_{i+1}'] = window_data.mean().mean()
+        stats[f'desv_tipica_{i+1}'] = window_data.std().mean()
+    if len(data) % window_size != 0:
+        remaining_data = data.iloc[num_windows * window_size:]
+        stats[f'media_global_{num_windows+1}'] = remaining_data.mean().mean()
+        stats[f'desv_tipica_{num_windows+1}'] = remaining_data.std().mean()
+    return stats
 
 def process_data(directory, train_file, output_directory):
     train_df = pd.read_csv(train_file)
@@ -11,14 +29,19 @@ def process_data(directory, train_file, output_directory):
     for filename in os.listdir(directory):
         if filename.endswith(".csv"):
             df = pd.read_csv(os.path.join(directory, filename))
-            media_global = df.mean().mean()
             volcan_id = os.path.splitext(filename)[0]
-            volcan_data = {'volcan_id': volcan_id, 'media_global': media_global}
+            stats = calculate_stats(df)
+            volcan_data = {'volcan_id': volcan_id, **stats}
+            volcan_data['time_to_eruption'] = time_to_eruption_dict.get(volcan_id)
             dfs.append(volcan_data)
 
     df_global = pd.DataFrame(dfs)
+    # Reordenar columnas según el orden especificado
+    cols = ['volcan_id', 'time_to_eruption', 'max_global', 'min_global', 'zero_crossings'] + \
+           [col for col in df_global.columns if col not in ['volcan_id', 'time_to_eruption', 'max_global', 'min_global', 'zero_crossings']]
+    df_global = df_global[cols]
+
     df_global.set_index('volcan_id', inplace=True)
-    df_global['time_to_eruption'] = [time_to_eruption_dict.get(segment_id) for segment_id in df_global.index]
 
     output_file = 'dataframe.csv'
     output_path = os.path.join(output_directory, output_file)
@@ -26,9 +49,7 @@ def process_data(directory, train_file, output_directory):
     # Guardar el DataFrame en el archivo CSV y reemplazar si ya existe
     df_global.to_csv(output_path, index=True)
 
-directory = 'src/data/prueba'
+directory = 'src/data/kaggle/input/train'
 train_file = 'src/data/kaggle/input/train.csv'
 output_directory = 'src/data/processed'
 process_data(directory, train_file, output_directory)
-
-

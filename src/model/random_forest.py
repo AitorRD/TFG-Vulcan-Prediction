@@ -7,7 +7,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error
 
 def calculate_mape(y_true, y_pred):
     return np.mean(np.abs((y_true - y_pred) / y_true)) * 100
-df = pd.read_csv('../data/dataframe2.csv')
+df = pd.read_csv('src/data/processed/dataframe.csv')
 
 X = df.drop(columns=['time_to_eruption'])
 y = df['time_to_eruption']
