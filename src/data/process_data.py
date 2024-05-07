@@ -57,7 +57,7 @@ def process_data(directory, train_file, output_directory):
     df_global.to_csv(output_path, index=True)
     print('Data processed')
 
-directory = 'src/data/prueba'
+directory = 'src/data/kaggle/input/train'
 train_file = 'src/data/kaggle/input/train.csv'
 output_directory = 'src/data/processed'
 process_data(directory, train_file, output_directory)
