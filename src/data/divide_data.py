@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn.model_selection import TimeSeriesSplit, KFold
 from sklearn.impute import SimpleImputer
 
-def divide_data(data_file, n_splits=5):
+def divide_data_kfold(data_file, n_splits=5):
     df = pd.read_csv(data_file)
     X = df.drop(columns=['time_to_eruption', 'volcan_id'])
     y = df['time_to_eruption']
