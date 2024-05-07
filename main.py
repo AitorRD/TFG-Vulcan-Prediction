@@ -24,8 +24,17 @@ def train_and_predict(model_name, data_file):
         train_and_predict_func = getattr(module, model_info['function'])
         if 'params' in model_info:
             params = model_info['params']
-            X_train, y_train = divide_data(data_file)
-            train_and_predict_func(X_train, y_train, **params)
+            X_train, X_test, y_train, y_test, X_imputed = divide_data(data_file)
+            trained_model = train_and_predict_func(X_train, y_train, **params)
+            if model_name == "KNN":
+                evaluate_knn_func = getattr(importlib.import_module('src.train.predict_knn'), 'evaluate_knn')
+                evaluate_knn_func(trained_model, X_test, y_test, data_file, X_imputed)
+            elif model_name == "DT":
+                evaluate_dt_func = getattr(importlib.import_module('src.train.predict_dt'), 'evaluate_dt')
+                evaluate_dt_func(trained_model, X_test, y_test, data_file, X_imputed)
+            elif model_name == "RF":
+                evaluate_dt_func = getattr(importlib.import_module('src.train.predict_rf'), 'evaluate_rf')
+                evaluate_dt_func(trained_model, X_test, y_test, data_file, X_imputed)
         else:
             train_and_predict_func(data_file)
     else:

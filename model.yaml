@@ -11,8 +11,27 @@ models:
 
   - name: RF
     module: src.model.random_forest
-    function: train_and_predict_rf
+    function: train_rf
+    params:
+      n_estimators: 100
+      max_depth: 5
+      min_samples_split: 2
+      min_samples_leaf: 1
+      random_state: 42
+  
+  - name: RF
+    module: src.train.predict_rf
+    function: evaluate_rf
 
   - name: DT
     module: src.model.decision_tree
-    function: train_and_predict_dt
+    function: train_dt
+    params:
+      max_depth: 5
+      min_samples_split: 2
+      min_samples_leaf: 1
+      random_state: 42
+
+  - name: DT
+    module: src.train.predict_dt
+    function: evaluate_dt

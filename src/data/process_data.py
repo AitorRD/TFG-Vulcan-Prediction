@@ -17,7 +17,11 @@ def calculate_stats(data):
         remaining_data = data.iloc[num_windows * window_size:]
         stats[f'media_global_{num_windows+1}'] = remaining_data.mean().mean()
         stats[f'desv_tipica_{num_windows+1}'] = remaining_data.std().mean()
-    return stats
+    
+    # Filtrar solo las estadísticas que no estén vacías
+    non_empty_stats = {key: value for key, value in stats.items() if not pd.isna(value)}
+    
+    return non_empty_stats
 
 def process_data(directory, train_file, output_directory):
     train_df = pd.read_csv(train_file)
@@ -36,6 +40,10 @@ def process_data(directory, train_file, output_directory):
             dfs.append(volcan_data)
 
     df_global = pd.DataFrame(dfs)
+    
+    # Eliminar columnas vacías
+    df_global.dropna(axis=1, how='all', inplace=True)
+    
     # Reordenar columnas según el orden especificado
     cols = ['volcan_id', 'time_to_eruption', 'max_global', 'min_global', 'zero_crossings'] + \
            [col for col in df_global.columns if col not in ['volcan_id', 'time_to_eruption', 'max_global', 'min_global', 'zero_crossings']]
@@ -46,10 +54,10 @@ def process_data(directory, train_file, output_directory):
     output_file = 'dataframe.csv'
     output_path = os.path.join(output_directory, output_file)
 
-    # Guardar el DataFrame en el archivo CSV y reemplazar si ya existe
     df_global.to_csv(output_path, index=True)
+    print('Data processed')
 
-directory = 'src/data/kaggle/input/train'
+directory = 'src/data/prueba'
 train_file = 'src/data/kaggle/input/train.csv'
 output_directory = 'src/data/processed'
 process_data(directory, train_file, output_directory)
