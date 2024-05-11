@@ -1,4 +1,4 @@
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import RandomForestRegressor #TODO Bayesian optimization
 
 def train_rf(X_train_list, y_train_list, random_state, n_estimators, max_depth, min_samples_split, min_samples_leaf):
     rf_model = RandomForestRegressor(n_estimators=n_estimators, 
