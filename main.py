@@ -12,9 +12,15 @@ def process_data():
     except subprocess.CalledProcessError as e:
         print(f"Error al ejecutar process_data.py: {e}")
 
-def divide_data(data_file):
-    module = importlib.import_module('src.data.divide_data')
-    return module.divide_data(data_file)
+def divide_data(data_file, split_type):
+    if split_type == 'KFOLD':
+        module = importlib.import_module('src.data.divide_data')
+        return module.divide_data_kfold(data_file)
+    elif split_type == 'TT':
+        module = importlib.import_module('src.data.divide_data')
+        return module.divide_data_tt(data_file)
+    else:
+        raise ValueError("Invalid split type. Supported types 'KFOLD' or 'TT'")
 
 def train_and_predict(model_name, data_file, split_type):
     model_config = load_model_config()
@@ -35,8 +41,8 @@ def train_and_predict(model_name, data_file, split_type):
 
 def main():
     process_data_mode = "DEFAULT" #OPTIONS DEFAULT , TSFRESH
-    model_name = "DT"  # OPTIONS: KNN , RF , DT
-    split_type = "KFOLD" # OPTIONS: KFOLD , TT
+    model_name = "KNN"  # OPTIONS: KNN , RF , DT
+    split_type = "TT" # OPTIONS: KFOLD , TT
     data_file = "src/data/processed/dataframe.csv"
 
     #process_data(process_data_mode)
