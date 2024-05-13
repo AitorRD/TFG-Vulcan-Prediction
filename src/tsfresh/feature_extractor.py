@@ -18,9 +18,9 @@ class FeatureExtractor:
             if filename.endswith(".csv"):
                 filepath = os.path.join(directory, filename)
                 time_series_data = pd.read_csv(filepath) 
-                time_series_data.insert(0, 'time', range(1, len(time_series_data) + 1))
-                time_series_data.insert(1, 'id', self.counter)
+                time_series_data.insert(0, 'id', self.counter)
                 self.counter += 1
+                time_series_data.insert(1, 'time', range(1, len(time_series_data) + 1))
                 time_series_data = self.procesar_sensores(time_series_data)
                 
                 features = extract_features(time_series_data, column_id='id', column_sort='time', default_fc_parameters=MinimalFCParameters())
