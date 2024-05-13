@@ -1,4 +1,4 @@
-volcan_id,time_to_eruption_knn
+volcan_id,time_to_eruption_dt
 1000015382,25289378.2
 1000554676,16230639.8
 1000745424,11635209.6

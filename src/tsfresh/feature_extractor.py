@@ -4,7 +4,7 @@ from sklearn import feature_selection, feature_extraction #TODO hacer esto tmb
 import pandas as pd
 import os
 import time
-"""
+
 class FeatureExtractor:
     def __init__(self):
         pass
@@ -56,9 +56,9 @@ class FeatureExtractor:
 
         return time_series_data
 
-feature_extractor = FeatureExtractor()
-directory = "../data/prueba"
-extracted_features = feature_extractor.extract_features(directory, False)"""
-
+if __name__ == '__main__':
+    feature_extractor = FeatureExtractor()
+    directory = "../data/kaggle/input/train"
+    extracted_features = feature_extractor.extract_features(directory, False)
 
 #TODO MLP (Neuronal), ADABOOST y XGBoost mirarmelo

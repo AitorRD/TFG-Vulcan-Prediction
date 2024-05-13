@@ -1,16 +1,16 @@
 models:
   - name: KNN
-    module: src.model.knn
+    module: src.model.train
     function: train_knn
     params:
       k: 5
       
   - name: KNN
-    module: src.train.predict_knn
+    module: src.predict.predict
     function: evaluate_knn
 
   - name: RF
-    module: src.model.random_forest
+    module: src.model.train
     function: train_rf
     params:
       n_estimators: 100
@@ -20,11 +20,11 @@ models:
       random_state: 42
   
   - name: RF
-    module: src.train.predict_rf
+    module: src.predict.predict
     function: evaluate_rf
 
   - name: DT
-    module: src.model.decision_tree
+    module: src.model.train
     function: train_dt
     params:
       max_depth: 5
@@ -33,5 +33,5 @@ models:
       random_state: 42
 
   - name: DT
-    module: src.train.predict_dt
+    module: src.predict.predict
     function: evaluate_dt
