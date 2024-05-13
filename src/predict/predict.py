@@ -6,7 +6,7 @@ import numpy as np
 def calculate_mape(y_true, y_pred):
     return np.mean(np.abs((y_true - y_pred) / y_true)) * 100
 
-def evaluate_rf(rf_model, X_test_list, y_test_list, data_file, X_imputed, modelname):
+def evaluate_rf(rf_model, X_test_list, y_test_list, data_file, X_imputed, modelname, divide_data_name, process_data_mode):
     df = pd.read_csv(data_file)
     y_pred_list = []
     mse_scores = []
@@ -27,10 +27,10 @@ def evaluate_rf(rf_model, X_test_list, y_test_list, data_file, X_imputed, modeln
 
     y_pred = np.concatenate(y_pred_list)
     y_pred_to_save = rf_model.predict(X_imputed)
-    res = print_save_results(df, mae_scores, mse_scores, mape_scores, y_pred_to_save, modelname)
+    res = print_save_results(df, mae_scores, mse_scores, mape_scores, y_pred_to_save, modelname, divide_data_name, process_data_mode)
     return res
 
-def evaluate_dt(tree_model, X_test_list, y_test_list, data_file, X_imputed, modelname):
+def evaluate_dt(tree_model, X_test_list, y_test_list, data_file, X_imputed, modelname, divide_data_name, process_data_mode):
     df = pd.read_csv(data_file)
     y_pred_list = []
     mse_scores = []
@@ -51,10 +51,10 @@ def evaluate_dt(tree_model, X_test_list, y_test_list, data_file, X_imputed, mode
 
     y_pred = np.concatenate(y_pred_list)
     y_pred_to_save = tree_model.predict(X_imputed)
-    res = print_save_results(df, mae_scores, mse_scores, mape_scores, y_pred_to_save, modelname)
+    res = print_save_results(df, mae_scores, mse_scores, mape_scores, y_pred_to_save, modelname, divide_data_name, process_data_mode)
     return res
 
-def evaluate_knn(knn, X_test_list, y_test_list, data_file, X_imputed, modelname):
+def evaluate_knn(knn, X_test_list, y_test_list, data_file, X_imputed, modelname, divide_data_name, process_data_mode):
     df = pd.read_csv(data_file)
     y_pred_list = []
     mse_scores = []
@@ -75,10 +75,10 @@ def evaluate_knn(knn, X_test_list, y_test_list, data_file, X_imputed, modelname)
     
     y_pred = np.concatenate(y_pred_list)
     y_pred_to_save = knn.predict(X_imputed)
-    res = print_save_results(df, mae_scores, mse_scores, mape_scores, y_pred_to_save, modelname)
+    res = print_save_results(df, mae_scores, mse_scores, mape_scores, y_pred_to_save, modelname, divide_data_name, process_data_mode)
     return res
      
-def print_save_results(df, mae_scores, mse_scores, mape_scores, y_pred_to_save, modelname):
+def print_save_results(df, mae_scores, mse_scores, mape_scores, y_pred_to_save, modelname, divide_data_name, process_data_mode):
     average_mae = sum(mae_scores) / len(mae_scores)
     average_mse = sum(mse_scores) / len(mse_scores)
     average_mape = sum(mape_scores) / len(mape_scores)
@@ -88,6 +88,6 @@ def print_save_results(df, mae_scores, mse_scores, mape_scores, y_pred_to_save, 
     print(f"{modelname} -> Error porcentaje absoluto medio (MAPE):", average_mape)
     
     results_df = pd.DataFrame({"volcan_id": df['volcan_id'], "time_to_eruption_dt": y_pred_to_save})
-    results_df.to_csv(f"src/predict/results/results_{modelname.lower()}.csv", index=False)
+    results_df.to_csv(f"src/predict/results/results_{modelname.lower()}_{divide_data_name.lower()}_{process_data_mode.lower()}.csv", index=False)
     
     print('Saved Results')
