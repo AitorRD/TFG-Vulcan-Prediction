@@ -6,9 +6,10 @@ def load_model_config():
     with open('model.yaml', 'r') as file:
         return yaml.safe_load(file)
 
-def process_data():
+def process_data(process_data_mode):
     try:
-        subprocess.run(['python', 'src/data/process_data.py'], check=True)
+        if process_data_mode == 'DEFAULT':
+            subprocess.run(['python', 'src/data/process_data.py'], check=True)
     except subprocess.CalledProcessError as e:
         print(f"Error al ejecutar process_data.py: {e}")
 
@@ -22,7 +23,7 @@ def divide_data(data_file, split_type):
     else:
         raise ValueError("Invalid split type. Supported types 'KFOLD' or 'TT'")
 
-def train_and_predict(model_name, data_file, split_type):
+def train_and_predict(model_name, data_file, split_type, process_data_mode):
     model_config = load_model_config()
     model_info = next((model for model in model_config['models'] if model['name'] == model_name), None)
 
@@ -35,18 +36,18 @@ def train_and_predict(model_name, data_file, split_type):
         params = model_info['params']
         X_train_list, X_test_list, y_train_list, y_test_list, X_imputed = divide_data(data_file, split_type)
         trained_model = train_func(X_train_list, y_train_list, **params)
-        evaluate_func(trained_model, X_test_list, y_test_list, data_file, X_imputed, model_name)
+        evaluate_func(trained_model, X_test_list, y_test_list, data_file, X_imputed, model_name, split_type, process_data_mode)
     else:
         print(f"El modelo {model_name} no está configurado en model.yaml")
 
 def main():
     process_data_mode = "DEFAULT" #OPTIONS DEFAULT , TSFRESH
     model_name = "KNN"  # OPTIONS: KNN , RF , DT
-    split_type = "TT" # OPTIONS: KFOLD , TT
+    split_type = "KFOLD" # OPTIONS: KFOLD , TT
     data_file = "src/data/processed/dataframe.csv"
 
     #process_data(process_data_mode)
-    train_and_predict(model_name, data_file, split_type)
+    train_and_predict(model_name, data_file, split_type, process_data_mode)
 
 if __name__ == "__main__":
     main()
