@@ -70,7 +70,7 @@ if __name__ == '__main__':
     directory = "../data/kaggle/input/train"
     features = "processed/tsfresh_data_minfc.csv"
     tte_file = "../data/kaggle/input/train.csv"
-    #extracted_features = feature_extractor.extract_features(directory)
+    extracted_features = feature_extractor.extract_features(directory)
     feature_extractor.add_tte(features, tte_file)
 
 #TODO MLP (Neuronal), ADABOOST y XGBoost mirarmelo
