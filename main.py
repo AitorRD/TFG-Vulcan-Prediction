@@ -41,10 +41,10 @@ def train_and_predict(model_name, data_file, split_type, process_data_mode):
         print(f"El modelo {model_name} no está configurado en model.yaml")
 
 def main():
-    process_data_mode = "DEFAULT" #OPTIONS DEFAULT , TSFRESH
+    process_data_mode = "TSFRESH" #OPTIONS DEFAULT , TSFRESH
     model_name = "KNN"  # OPTIONS: KNN , RF , DT
     split_type = "KFOLD" # OPTIONS: KFOLD , TT
-    data_file = "src/data/processed/dataframe.csv"
+    data_file = "src/tsfresh/processed/tsfresh_data_minfc.csv"
 
     #process_data(process_data_mode)
     train_and_predict(model_name, data_file, split_type, process_data_mode)
