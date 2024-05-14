@@ -18,9 +18,9 @@ class FeatureExtractor:
             if filename.endswith(".csv"):
                 filepath = os.path.join(directory, filename)
                 time_series_data = pd.read_csv(filepath) 
-                time_series_data.insert(0, 'time', range(1, len(time_series_data) + 1))
-                time_series_data.insert(1, 'id', self.counter)
+                time_series_data.insert(0, 'id', self.counter)
                 self.counter += 1
+                time_series_data.insert(1, 'time', range(1, len(time_series_data) + 1))
                 time_series_data = self.procesar_sensores(time_series_data)
                 
                 features = extract_features(time_series_data, column_id='id', column_sort='time', default_fc_parameters=MinimalFCParameters())
@@ -67,7 +67,7 @@ class FeatureExtractor:
 
 if __name__ == '__main__':
     feature_extractor = FeatureExtractor()
-    directory = "../data/prueba"
+    directory = "../data/kaggle/input/train"
     features = "processed/tsfresh_data_minfc.csv"
     tte_file = "../data/kaggle/input/train.csv"
     #extracted_features = feature_extractor.extract_features(directory)
