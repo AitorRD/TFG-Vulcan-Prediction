@@ -48,10 +48,29 @@ class FeatureExtractor:
         time_series_data['media_sensor'] = time_series_data.mean(axis=1)
         time_series_data = time_series_data[['id','time','media_sensor']]
         return time_series_data
+    
+    def add_tte(self, features, tte_file):
+        features_df = pd.read_csv(features)
+        tte = pd.read_csv(tte_file)
+        tte.columns = ['segment_id', 'time_to_eruption']
+
+        dataframe = features_df.merge(tte, left_on='volcan_id', right_on='segment_id', how='left')
+        dataframe.drop(columns=['segment_id'], inplace=True)
+
+        output_dir = "processed"
+        os.makedirs(output_dir, exist_ok=True)
+        filepath = os.path.join(output_dir, "tsfresh_data_tte.csv")
+        dataframe.to_csv(filepath, index=False)
+        print(f"Características con time_to_eruption guardadas en {filepath}")
+
+        return dataframe
 
 if __name__ == '__main__':
     feature_extractor = FeatureExtractor()
     directory = "../data/prueba"
-    extracted_features = feature_extractor.extract_features(directory)
+    features = "processed/tsfresh_data_minfc.csv"
+    tte_file = "../data/kaggle/input/train.csv"
+    #extracted_features = feature_extractor.extract_features(directory)
+    feature_extractor.add_tte(features, tte_file)
 
 #TODO MLP (Neuronal), ADABOOST y XGBoost mirarmelo
