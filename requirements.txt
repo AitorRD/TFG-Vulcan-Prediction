@@ -6,3 +6,4 @@ torch==2.2.1
 matplotlib==3.8.3
 pyyaml==6.0.1
 tsfresh==0.20.2
+bayesian-optimization==1.4.3

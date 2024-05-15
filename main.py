@@ -42,7 +42,7 @@ def train_and_predict(model_name, data_file, split_type, process_data_mode):
 
 def main():
     process_data_mode = "TSFRESH" #OPTIONS DEFAULT , TSFRESH
-    model_name = "RF"  # OPTIONS: KNN , RF , DT
+    model_name = "DT"  # OPTIONS: KNN , RF , DT
     split_type = "KFOLD" # OPTIONS: KFOLD , TT
     data_file = "src/tsfresh/processed/tsfresh_data_tte.csv"
 
