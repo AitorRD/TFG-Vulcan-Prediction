@@ -83,7 +83,7 @@ rf_optimizer = BayesianOptimization(
     random_state=42,
     allow_duplicate_points=True  # Permitir puntos duplicados
 )
-rf_optimizer.maximize(init_points=10, n_iter=10)
+rf_optimizer.maximize(init_points=10, n_iter=5)
 
 # Optimización para DecisionTreeRegressor
 '''dt_optimizer = BayesianOptimization(

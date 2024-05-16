@@ -25,3 +25,12 @@
 |  KNN    | 9941704.64116674     | 147716184669670.53   | 354.56927066629555   |
 |  DT     | 10176752.514536511   | 148505264418794.25   | 320.8084057136354    |
 |  RF     | 10105131.536167238   | 142607994420256.03   | 339.58984158702856   |
+
+RF -> Error absoluto medio (MAE): 11106610.871424407
+RF -> Error cuadrático medio (MSE): 167871005266158.34
+RF -> Error porcentaje absoluto medio (MAPE): 412.96006212109177
+
+Random Forest Trained
+RF -> Error absoluto medio (MAE): 10213259.743117627
+RF -> Error cuadrático medio (MSE): 145571813470554.2
+RF -> Error porcentaje absoluto medio (MAPE): 371.03190546794906
