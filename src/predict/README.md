@@ -34,3 +34,8 @@ Random Forest Trained
 RF -> Error absoluto medio (MAE): 10213259.743117627
 RF -> Error cuadrático medio (MSE): 145571813470554.2
 RF -> Error porcentaje absoluto medio (MAPE): 371.03190546794906
+
+RF Optimized by Bayesian OPT (using tsfresh_lasso_dataset)
+RF -> Error absoluto medio (MAE): 9006056.177125093
+RF -> Error cuadrático medio (MSE): 117774221577736.22
+RF -> Error porcentaje absoluto medio (MAPE): 317.7004943207845
