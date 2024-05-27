@@ -1,6 +1,6 @@
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.tree import DecisionTreeRegressor
-from sklearn.ensemble import RandomForestRegressor #TODO Bayesian optimization
+from sklearn.ensemble import RandomForestRegressor, AdaBoostRegressor
 
 def train_knn(X_train_list, y_train_list, k):
     knn = KNeighborsRegressor(n_neighbors=k)
@@ -31,3 +31,16 @@ def train_rf(X_train_list, y_train_list, random_state, n_estimators, max_depth, 
         rf_model.fit(X_train, y_train)
     print('Random Forest Trained')
     return rf_model
+
+def train_adaboost(X_train_list, y_train_list, random_state, n_estimators, loss, learning_rate):
+    estimator = DecisionTreeRegressor(max_depth=5)
+    ada_model = AdaBoostRegressor(estimator=estimator,
+                                n_estimators=n_estimators, 
+                                learning_rate=learning_rate, 
+                                loss=loss, 
+                                random_state= random_state
+                                    )
+    for X_train, y_train in zip(X_train_list, y_train_list):
+        ada_model.fit(X_train, y_train)
+    print('AdaBoost Trained')
+    return ada_model

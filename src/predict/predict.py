@@ -6,7 +6,7 @@ import numpy as np
 def calculate_mape(y_true, y_pred):
     return np.mean(np.abs((y_true - y_pred) / y_true)) * 100
 
-def evaluate_rf(rf_model, X_test_list, y_test_list, data_file, X_imputed, modelname, divide_data_name, process_data_mode):
+def evaluate_model(model, X_test_list, y_test_list, data_file, X_imputed, model_name, divide_data_name, process_data_mode):
     df = pd.read_csv(data_file)
     y_pred_list = []
     mse_scores = []
@@ -14,55 +14,7 @@ def evaluate_rf(rf_model, X_test_list, y_test_list, data_file, X_imputed, modeln
     mape_scores = []
     
     for X_test, y_test in zip(X_test_list, y_test_list):
-        y_pred = rf_model.predict(X_test)
-        y_pred_list.append(y_pred)
-        
-        mae = mean_absolute_error(y_test, y_pred)
-        mse = mean_squared_error(y_test, y_pred)
-        mape = calculate_mape(y_test, y_pred)
-        
-        mae_scores.append(mae)
-        mse_scores.append(mse)
-        mape_scores.append(mape)
-
-    y_pred = np.concatenate(y_pred_list)
-    y_pred_to_save = rf_model.predict(X_imputed)
-    res = print_save_results(df, mae_scores, mse_scores, mape_scores, y_pred_to_save, modelname, divide_data_name, process_data_mode)
-    return res
-
-def evaluate_dt(tree_model, X_test_list, y_test_list, data_file, X_imputed, modelname, divide_data_name, process_data_mode):
-    df = pd.read_csv(data_file)
-    y_pred_list = []
-    mse_scores = []
-    mae_scores = []
-    mape_scores = []
-    
-    for X_test, y_test in zip(X_test_list, y_test_list):
-        y_pred = tree_model.predict(X_test)
-        y_pred_list.append(y_pred)
-        
-        mae = mean_absolute_error(y_test, y_pred)
-        mse = mean_squared_error(y_test, y_pred)
-        mape = calculate_mape(y_test, y_pred)
-        
-        mae_scores.append(mae)
-        mse_scores.append(mse)
-        mape_scores.append(mape)
-
-    y_pred = np.concatenate(y_pred_list)
-    y_pred_to_save = tree_model.predict(X_imputed)
-    res = print_save_results(df, mae_scores, mse_scores, mape_scores, y_pred_to_save, modelname, divide_data_name, process_data_mode)
-    return res
-
-def evaluate_knn(knn, X_test_list, y_test_list, data_file, X_imputed, modelname, divide_data_name, process_data_mode):
-    df = pd.read_csv(data_file)
-    y_pred_list = []
-    mse_scores = []
-    mae_scores = []
-    mape_scores = []
-    
-    for X_test, y_test in zip(X_test_list, y_test_list):
-        y_pred = knn.predict(X_test)
+        y_pred = model.predict(X_test)
         y_pred_list.append(y_pred)
         
         mae = mean_absolute_error(y_test, y_pred)
@@ -74,10 +26,10 @@ def evaluate_knn(knn, X_test_list, y_test_list, data_file, X_imputed, modelname,
         mape_scores.append(mape)
     
     y_pred = np.concatenate(y_pred_list)
-    y_pred_to_save = knn.predict(X_imputed)
-    res = print_save_results(df, mae_scores, mse_scores, mape_scores, y_pred_to_save, modelname, divide_data_name, process_data_mode)
+    y_pred_to_save = model.predict(X_imputed)
+    res = print_save_results(df, mae_scores, mse_scores, mape_scores, y_pred_to_save, model_name, divide_data_name, process_data_mode)
     return res
-     
+
 def print_save_results(df, mae_scores, mse_scores, mape_scores, y_pred_to_save, modelname, divide_data_name, process_data_mode):
     average_mae = sum(mae_scores) / len(mae_scores)
     average_mse = sum(mse_scores) / len(mse_scores)

@@ -3,6 +3,3 @@ data/kaggle
 src/data/__pycache__
 src/model/__pycache__
 src/predict/__pycache__
-src/data/__pycache__/divide_data.cpython-311.pyc
-src/model/__pycache__/train.cpython-311.pyc
-src/predict/__pycache__/predict.cpython-311.pyc

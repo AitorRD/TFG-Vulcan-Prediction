@@ -14,11 +14,6 @@
 |  DT     | 9866412.024105048    | 143204623332782.06   | 365.09101801074763   |
 |  RF     | 9596764.33166747     | 130841362527146.53   | 336.70053511541505   |
 
-# Decision Tree
-(MAE):  Previo -> 9866412.024105048  | Post -> 4305423.9420395475
-(MSE):  Previo -> 143204623332782.06 | Post -> 87777134654644.97
-(MAPE): Previo -> 365.09101801074763 | Post -> 87.37105028703556
-
 ## 3º Iteración (TsFresh - Cross Validator)
 | Model   |         MAE          |         MSE          |        MAPE          |
 |---------|----------------------|----------------------|----------------------|
@@ -26,16 +21,20 @@
 |  DT     | 10176752.514536511   | 148505264418794.25   | 320.8084057136354    |
 |  RF     | 10105131.536167238   | 142607994420256.03   | 339.58984158702856   |
 
-RF -> Error absoluto medio (MAE): 11106610.871424407
-RF -> Error cuadrático medio (MSE): 167871005266158.34
-RF -> Error porcentaje absoluto medio (MAPE): 412.96006212109177
 
-Random Forest Trained
-RF -> Error absoluto medio (MAE): 10213259.743117627
-RF -> Error cuadrático medio (MSE): 145571813470554.2
-RF -> Error porcentaje absoluto medio (MAPE): 371.03190546794906
+## Optimized by Bayesian OPT using deafult dataframe:
+DT -> Error absoluto medio (MAE): 2712615.5024054036
+DT -> Error cuadrático medio (MSE): 52186491537514.98
+DT -> Error porcentaje absoluto medio (MAPE): 56.92034277026964
 
-RF Optimized by Bayesian OPT (using tsfresh_lasso_dataset)
-RF -> Error absoluto medio (MAE): 9006056.177125093
-RF -> Error cuadrático medio (MSE): 117774221577736.22
-RF -> Error porcentaje absoluto medio (MAPE): 317.7004943207845
+KNN -> Error absoluto medio (MAE): 8109623.410509619
+KNN -> Error cuadrático medio (MSE): 108645008175168.02
+KNN -> Error porcentaje absoluto medio (MAPE): 211.9595032399446
+
+RF -> Error absoluto medio (MAE): 7377770.541208173
+RF -> Error cuadrático medio (MSE): 80740432852899.17
+RF -> Error porcentaje absoluto medio (MAPE): 243.90736844303015
+
+ADABOOST -> Error absoluto medio (MAE): 9421054.550152041
+ADABOOST -> Error cuadrático medio (MSE): 112531138390984.9
+ADABOOST -> Error porcentaje absoluto medio (MAPE): 295.904117980348
