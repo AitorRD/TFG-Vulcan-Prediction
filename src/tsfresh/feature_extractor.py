@@ -1,7 +1,6 @@
-from tsfresh import extract_features, extract_relevant_features
+from tsfresh import extract_features
 from tsfresh.feature_extraction import MinimalFCParameters
 from tsfresh.utilities.dataframe_functions import impute
-from sklearn import feature_selection, feature_extraction #TODO hacer esto tmb 
 import pandas as pd
 import os
 import time
@@ -67,10 +66,8 @@ class FeatureExtractor:
 
 if __name__ == '__main__':
     feature_extractor = FeatureExtractor()
-    directory = "../data/kaggle/input/train"
-    features = "processed/tsfresh_data_minfc.csv"
-    tte_file = "../data/kaggle/input/train.csv"
+    directory = "src/data/kaggle/input/train"  # Ajustar ruta según sea necesario
+    features = "src/tsfresh/processed/tsfresh_data_minfc.csv"
+    tte_file = "src/data/kaggle/input/train.csv"  # Ajustar ruta según sea necesario
     extracted_features = feature_extractor.extract_features(directory)
     feature_extractor.add_tte(features, tte_file)
-
-#TODO MLP (Neuronal), ADABOOST y XGBoost mirarmelo

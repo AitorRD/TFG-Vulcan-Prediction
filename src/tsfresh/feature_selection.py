@@ -1,76 +1,48 @@
-import os
 import pandas as pd
+from sklearn.feature_selection import SelectPercentile, f_regression, mutual_info_regression
 from sklearn.model_selection import KFold
-from sklearn.feature_selection import SelectKBest, SelectPercentile, f_regression
-from sklearn.preprocessing import StandardScaler
-from sklearn.impute import SimpleImputer
 import numpy as np
-import matplotlib.pyplot as plt
 
-# Crear directorio si no existe
-output_dir = 'src/graphs/feature_selection'
-os.makedirs(output_dir, exist_ok=True)
+def load_data(file_path):
+    return pd.read_csv(file_path)
 
-def divide_data_kfold(data_file, n_splits=5):
-    df = pd.read_csv(data_file)
-    X = df.drop(columns=['time_to_eruption', 'volcan_id'])
-    y = df['time_to_eruption']
+def select_features(X, y, method='f_regression', percentile=10, n_splits=5):
+    selected_features_indices = []
+    kf = KFold(n_splits=n_splits)
 
-    imputer = SimpleImputer(strategy='median')
-    X_imputed = imputer.fit_transform(X)
+    for train_index, _ in kf.split(X):
+        X_train, y_train = X.iloc[train_index], y.iloc[train_index]
 
-    kf = KFold(n_splits=n_splits, shuffle=True, random_state=42)
-
-    X_train_list = []
-    X_test_list = []
-    y_train_list = []
-    y_test_list = []
-
-    for train_index, test_index in kf.split(X):
-        X_train, X_test = X_imputed[train_index], X_imputed[test_index]
-        y_train, y_test = y.iloc[train_index], y.iloc[test_index]
-        X_train_list.append(X_train)
-        X_test_list.append(X_test)
-        y_train_list.append(y_train)
-        y_test_list.append(y_test)
-
-    return X_train_list, X_test_list, y_train_list, y_test_list, X_imputed, y, X
-
-def feature_selection_kfold(X_train_list, y_train_list, X, method='kbest', param=10):
-    feature_names = X.columns
-    selected_features = []
-
-    for X_train, y_train in zip(X_train_list, y_train_list):
-        scaler = StandardScaler()
-        X_train_scaled = scaler.fit_transform(X_train)
-        if method == 'kbest':
-            selector = SelectKBest(score_func=f_regression, k=param)
-        elif method == 'percentile':
-            selector = SelectPercentile(score_func=f_regression, percentile=param)
+        if method == 'f_regression':
+            selector = SelectPercentile(score_func=f_regression, percentile=percentile)
+        elif method == 'mutual_info':
+            selector = SelectPercentile(score_func=mutual_info_regression, percentile=percentile)
         else:
-            raise ValueError("Método no soportado. Usa 'kbest' o 'percentile'.")
+            raise ValueError("Invalid method. Use 'f_regression' or 'mutual_info'")
 
-        selector.fit(X_train_scaled, y_train)
-        selected_features.append(feature_names[selector.get_support()])
+        selector.fit(X_train, y_train)
+        selected_features_indices.append(selector.get_support(indices=True))
 
-    selected_features = pd.Series(np.concatenate(selected_features)).value_counts()
-    selected_features = selected_features[selected_features == len(X_train_list)].index
+    selected_indices = np.mean(selected_features_indices, axis=0)
+    return selected_indices
 
-    return selected_features
+def save_selected_features(features_df, selected_indices, output_file):
+    selected_features_names = features_df.columns[selected_indices.astype(int)].tolist()  # Convert indices to integers
+    selected_df = features_df[['volcan_id', 'time_to_eruption'] + selected_features_names]
+    selected_df.to_csv(output_file, index=False)
+    print(f"Selected features saved to {output_file}")
+    print("Selected features:", selected_features_names)  # Print selected features
 
-data_file = 'src/tsfresh/processed/tsfresh_data_tte.csv'
-X_train_list, X_test_list, y_train_list, y_test_list, X_imputed, y, X = divide_data_kfold(data_file, n_splits=5)
-selected_features_kbest = feature_selection_kfold(X_train_list, y_train_list, X, method='kbest', param=5)
-selected_features_percentile = feature_selection_kfold(X_train_list, y_train_list,X, method='percentile', param=20)
-
-print("Características seleccionadas por SelectKBest:")
-print(selected_features_kbest)
-
-print("\nCaracterísticas seleccionadas por SelectPercentile:")
-print(selected_features_percentile)
-
-df = pd.read_csv(data_file)
-df_selected_kbest = df[['time_to_eruption', 'volcan_id'] + list(selected_features_kbest)]
-df_selected_percentile = df[['time_to_eruption', 'volcan_id'] + list(selected_features_percentile)]
-df_selected_kbest.to_csv('src/tsfresh/processed/tsfresh_data_tte_selected_kbest.csv', index=False)
-df_selected_percentile.to_csv('src/tsfresh/processed/tsfresh_data_tte_selected_percentile.csv', index=False)
+if __name__ == '__main__':
+    data_file = "src/tsfresh/processed/tsfresh_data_tte.csv"
+    features_df = load_data(data_file)
+    
+    X = features_df.drop(columns=['volcan_id', 'time_to_eruption'])
+    y = features_df['time_to_eruption']
+    
+    method = 'mutual_info'  # Choose 'f_regression' or 'mutual_info'
+    percentile = 42  
+    selected_indices = select_features(X, y, method=method, percentile=percentile, n_splits=5)
+    
+    output_file = "src/tsfresh/processed/tsfresh_data_tte_selected.csv"
+    save_selected_features(features_df, selected_indices, output_file)

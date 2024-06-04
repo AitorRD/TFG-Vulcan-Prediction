@@ -1,6 +1,6 @@
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.tree import DecisionTreeRegressor
-from sklearn.ensemble import RandomForestRegressor, AdaBoostRegressor
+from sklearn.ensemble import RandomForestRegressor, AdaBoostRegressor, GradientBoostingRegressor
 
 def train_knn(X_train_list, y_train_list, k):
     knn = KNeighborsRegressor(n_neighbors=k)
@@ -9,23 +9,21 @@ def train_knn(X_train_list, y_train_list, k):
     print('KNN Trained')
     return knn
 
-def train_dt(X_train_list, y_train_list, random_state, max_depth, min_samples_split, min_samples_leaf):
+def train_dt(X_train_list, y_train_list, random_state, max_depth, min_samples_split):
     tree_model = DecisionTreeRegressor(random_state=random_state, 
                                        max_depth=max_depth, 
-                                       min_samples_split=min_samples_split, 
-                                       min_samples_leaf=min_samples_leaf)
+                                       min_samples_split=min_samples_split)
     for X_train, y_train in zip(X_train_list, y_train_list):
         tree_model.fit(X_train, y_train)
     print('Decision Tree Trained')
     return tree_model
 
 
-def train_rf(X_train_list, y_train_list, random_state, n_estimators, max_depth, min_samples_split, min_samples_leaf, n_jobs):
+def train_rf(X_train_list, y_train_list, random_state, n_estimators, max_depth, min_samples_split, n_jobs):
     rf_model = RandomForestRegressor(n_estimators=n_estimators, 
                                      random_state=random_state, 
                                      max_depth=max_depth,
                                      min_samples_split=min_samples_split, 
-                                     min_samples_leaf=min_samples_leaf,
                                      n_jobs=n_jobs)
     for X_train, y_train in zip(X_train_list, y_train_list):
         rf_model.fit(X_train, y_train)
@@ -44,3 +42,15 @@ def train_adaboost(X_train_list, y_train_list, random_state, n_estimators, loss,
         ada_model.fit(X_train, y_train)
     print('AdaBoost Trained')
     return ada_model
+
+def train_gboost(X_train_list, y_train_list, max_depth, random_state, n_estimators, loss, learning_rate):
+    gboost_model = GradientBoostingRegressor(max_depth=max_depth,
+                                n_estimators=n_estimators, 
+                                learning_rate=learning_rate, 
+                                loss=loss, 
+                                random_state= random_state
+                                    )
+    for X_train, y_train in zip(X_train_list, y_train_list):
+        gboost_model.fit(X_train, y_train)
+    print('GradientBoost Trained')
+    return gboost_model

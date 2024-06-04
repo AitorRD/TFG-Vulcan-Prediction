@@ -1,3 +1,3 @@
-Best hyperparameters for DecisionTreeRegressor:  {'target': 12458614.822578039, 'params': {'max_depth': 20.0, 'min_samples_leaf': 1.0, 'min_samples_split': 2.0}}
-
-Best hyperparameters for RandomForestRegressor: {'target': -152065160027110.6, 'params': {'max_depth': 10.0, 'min_samples_leaf': 4.0, 'min_samples_split': 10.0, 'n_estimators': 172.30320764940646}}
+_____________
+Best hyperparameters for DecisionTreeRegressor:  {'target': 12377197.330350097, 'params': {'max_depth': 27.22524678080184, 'min_samples_split': 4.2194366103636405}}
+Best hyperparameters for RandomForestRegressor:  {'target': 11013282.11613867, 'params': {'max_depth': 1.0, 'min_samples_split': 20.0, 'n_estimators': 223.61906145417683}}
