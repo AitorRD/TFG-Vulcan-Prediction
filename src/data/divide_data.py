@@ -3,7 +3,7 @@ from sklearn.model_selection import KFold, train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.impute import SimpleImputer
 
-def divide_data_tt(data_file):
+def divide_data_holdout(data_file):
     df = pd.read_csv(data_file)
     X = df.drop(columns=['time_to_eruption', 'volcan_id'])
     y = df['time_to_eruption']

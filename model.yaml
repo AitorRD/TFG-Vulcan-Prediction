@@ -20,7 +20,7 @@ models:
     function: train_dt
     params:
       max_depth: 27
-      min_samples_split: 2
+      min_samples_split: 4
       random_state: 42
 
   - name: ADABOOST

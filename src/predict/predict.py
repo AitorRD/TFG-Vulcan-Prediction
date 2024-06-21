@@ -39,7 +39,7 @@ def print_save_results(df, mae_scores, mse_scores, mape_scores, y_pred_to_save, 
     print(f"{modelname} -> Error cuadrático medio (MSE):", average_mse)
     print(f"{modelname} -> Error porcentaje absoluto medio (MAPE):", average_mape)
     
-    results_df = pd.DataFrame({"volcan_id": df['volcan_id'], "time_to_eruption_dt": y_pred_to_save})
+    results_df = pd.DataFrame({"volcan_id": df['volcan_id'], "time_to_eruption": y_pred_to_save})
     results_df.to_csv(f"src/predict/results/results_{modelname.lower()}_{divide_data_name.lower()}_{process_data_mode.lower()}.csv", index=False)
     
     print('Saved Results')

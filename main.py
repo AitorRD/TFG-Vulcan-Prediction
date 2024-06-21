@@ -8,22 +8,23 @@ def load_model_config():
 
 def process_data(process_data_mode):
     try:
-        if process_data_mode == 'DEFAULT':
+        if process_data_mode == 'MANUALFEATURES':
             subprocess.run(['python', 'src/data/process_data.py'], check=True)
         elif process_data_mode == 'TSFRESH':
             subprocess.run(['python', 'src/tsfresh/feature_extractor.py'], check=True)
+            subprocess.run(['python', 'src/tsfresh/feature_selector.py'], check=True)
     except subprocess.CalledProcessError as e:
-        print(f"Error al ejecutar el script de procesamiento de datos: {e}")
+        print(f"Error executing data processing script: {e}")
 
 def divide_data(data_file, split_type):
-    if split_type == 'KFOLD':
+    if split_type == 'CROSSVAL':
         module = importlib.import_module('src.data.divide_data')
         return module.divide_data_kfold(data_file)
-    elif split_type == 'TT':
+    elif split_type == 'HOLDOUT':
         module = importlib.import_module('src.data.divide_data')
-        return module.divide_data_tt(data_file)
+        return module.divide_data_holdout(data_file)
     else:
-        raise ValueError("Invalid split type. Supported types 'KFOLD' or 'TT'")
+        raise ValueError("Invalid split type. Supported types are 'CROSSVAL' or 'HOLDOUT'")
 
 def train_and_predict(model_name, data_file, split_type, process_data_mode):
     model_config = load_model_config()
@@ -41,7 +42,7 @@ def train_and_predict(model_name, data_file, split_type, process_data_mode):
         evaluate_func = getattr(predict_module, 'evaluate_model')
         evaluate_func(trained_model, X_test_list, y_test_list, data_file, X_imputed, model_name, split_type, process_data_mode)
     else:
-        print(f"El modelo {model_name} no está configurado en model.yaml")
+        print(f"Model {model_name} is not configured in model.yaml")
 
 def optimize_model(model_name):
     optimization_module = importlib.import_module('src.model.optimization')
@@ -55,32 +56,37 @@ def optimize_model(model_name):
         print(f"No optimization function available for model {model_name}")
 
 def main():
-    process_data_mode = "DEFAULT" #OPTIONS DEFAULT , TSFRESH
-    model_name = "DT"  # OPTIONS: KNN , RF , DT , ADABOOST , GBOOST
-    split_type = "KFOLD" # OPTIONS: KFOLD , TT
-    data_file = "src/data/processed/dataframe.csv" 
-
-    #src/data/processed/dataframe.csv
-    #src/tsfresh/processed/tsfresh_data_tte.csv 
-    #src/tsfresh/processed/tsfresh_data_tte_selected_lasso.csv 
+    data_file_manual = "src/data/processed/dataframe.csv"
+    data_file_tsfresh = "src/tsfresh/processed/tsfresh_dataframe.csv"
 
     user_input = input("Do you want to process the raw data? (y/n): ").strip().lower()
     if user_input == 'y':
-        print("-------- PROCESSING DATA --------") 
+        process_data_mode = input("Enter data processing mode (MANUALFEATURES/TSFRESH): ").strip().upper()
+        print("-------- PROCESSING DATA --------")
         process_data(process_data_mode)
         print("-------- DATA SAVED --------")
     else:
         print("Process skipped")
-
+        process_data_mode = input("Enter data mode that is already processed (MANUALFEATURES/TSFRESH): ").strip().upper()
+  
+    if process_data_mode == 'MANUALFEATURES':
+        data_file = data_file_manual
+    elif process_data_mode == 'TSFRESH':
+        data_file = data_file_tsfresh
+    else:
+        raise ValueError("Invalid data processing mode. Supported modes are 'MANUALFEATURES' or 'TSFRESH'")
 
     user_input = input("Do you want to run the model optimization? (y/n): ").strip().lower()
     if user_input == 'y':
+        model_name = input("Enter the model you want to optimize (KNN/DT/RF/ADABOOST/GBOOST): ").strip().upper()
         print("-------- OPTIMIZING PARAMETERS --------")  
         optimize_model(model_name)
     else:
         print("Optimization skipped")
     
-    print("-------- TRAINING MODELS --------")
+    split_type = input("Enter the split type you want to use (CROSSVAL/HOLDOUT): ").strip().upper()
+    model_name = input("Enter the model you want to use (KNN/DT/RF/ADABOOST/GBOOST): ").strip().upper()
+    print("-------- TRAINING MODEL --------")
     train_and_predict(model_name, data_file, split_type, process_data_mode)
 
 

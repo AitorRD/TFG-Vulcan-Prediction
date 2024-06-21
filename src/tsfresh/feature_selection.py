@@ -40,9 +40,9 @@ if __name__ == '__main__':
     X = features_df.drop(columns=['volcan_id', 'time_to_eruption'])
     y = features_df['time_to_eruption']
     
-    method = 'mutual_info'  # Choose 'f_regression' or 'mutual_info'
+    method = 'f_regression'  # Choose 'f_regression' or 'mutual_info'
     percentile = 42  
     selected_indices = select_features(X, y, method=method, percentile=percentile, n_splits=5)
     
-    output_file = "src/tsfresh/processed/tsfresh_data_tte_selected.csv"
+    output_file = "src/tsfresh/processed/tsfresh_dataframe.csv"
     save_selected_features(features_df, selected_indices, output_file)
