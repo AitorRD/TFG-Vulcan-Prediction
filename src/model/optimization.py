@@ -3,7 +3,7 @@ from sklearn.impute import SimpleImputer
 from bayes_opt import BayesianOptimization
 from sklearn.model_selection import cross_val_score
 from sklearn.tree import DecisionTreeRegressor
-from sklearn.ensemble import RandomForestRegressor, AdaBoostRegressor
+from sklearn.ensemble import RandomForestRegressor, AdaBoostRegressor, GradientBoostingRegressor
 
 data_file = "src/data/processed/dataframe.csv"
 df = pd.read_csv(data_file)
@@ -39,7 +39,18 @@ def params_ab(n_estimators, learning_rate):
         estimator=estimator,
         n_estimators=int(n_estimators), 
         learning_rate=learning_rate, 
-        loss='linear',
+        loss='exponential',
+        random_state=42
+    )
+    score = -cross_val_score(model, X_imputed, y, cv=5, scoring='neg_mean_absolute_error').mean()
+    return score
+
+def params_gboost(n_estimators, max_depth, learning_rate):
+    model = GradientBoostingRegressor(
+        max_depth=int(max_depth),
+        n_estimators=int(n_estimators), 
+        learning_rate=learning_rate, 
+        loss='squared_error',
         random_state=42
     )
     score = -cross_val_score(model, X_imputed, y, cv=5, scoring='neg_mean_absolute_error').mean()
@@ -93,3 +104,20 @@ def optimize_ab():
     )
     ab_optimizer.maximize(init_points=10, n_iter=40)
     print("Best hyperparameters for AdaBoostRegressor: ", ab_optimizer.max)
+
+def optimize_gboost():
+    print("______________________GBOOST OPTIMIZING______________________")    
+    gboost_param_bounds = {
+        'n_estimators': (1, 1000),
+        'max_depth': (1, 50),
+        'learning_rate': (0.01, 1.0)
+    }
+
+    gboost_optimizer = BayesianOptimization(
+        f=params_gboost,
+        pbounds=gboost_param_bounds,
+        random_state=42,
+        allow_duplicate_points=False
+    )
+    gboost_optimizer.maximize(init_points=10, n_iter=40)
+    print("Best hyperparameters for GradientBoostRegressor: ", gboost_optimizer.max)

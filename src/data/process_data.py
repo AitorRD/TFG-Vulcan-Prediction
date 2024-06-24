@@ -23,8 +23,8 @@ def calculate_stats(data):
     
     return non_empty_stats
 
-def process_data(directory, train_file, output_directory):
-    train_df = pd.read_csv(train_file)
+def process_data(directory, tte_file, output_directory):
+    train_df = pd.read_csv(tte_file)
     train_df['segment_id'] = train_df['segment_id'].astype(str)
     time_to_eruption_dict = dict(zip(train_df['segment_id'], train_df['time_to_eruption']))
 
@@ -36,7 +36,6 @@ def process_data(directory, train_file, output_directory):
             volcan_id = os.path.splitext(filename)[0]
             stats = calculate_stats(df)
             volcan_data = {'volcan_id': volcan_id, **stats}
-            volcan_data['time_to_eruption'] = time_to_eruption_dict.get(volcan_id)
             dfs.append(volcan_data)
 
     df_global = pd.DataFrame(dfs)
@@ -44,9 +43,13 @@ def process_data(directory, train_file, output_directory):
     # Eliminar columnas vacías
     df_global.dropna(axis=1, how='all', inplace=True)
     
-    # Reordenar columnas según el orden especificado
-    cols = ['volcan_id', 'time_to_eruption', 'max_global', 'min_global', 'zero_crossings'] + \
-           [col for col in df_global.columns if col not in ['volcan_id', 'time_to_eruption', 'max_global', 'min_global', 'zero_crossings']]
+    # Reordenar columnas asegurando que 'time_to_eruption' esté al inicio solo si está presente
+    columns_to_place_first = ['volcan_id', 'time_to_eruption', 'max_global', 'min_global', 'zero_crossings']
+    cols = columns_to_place_first + [col for col in df_global.columns if col not in columns_to_place_first]
+    
+    # Filtrar solo las columnas existentes en el DataFrame
+    cols = [col for col in cols if col in df_global.columns]
+    
     df_global = df_global[cols]
 
     df_global.set_index('volcan_id', inplace=True)
@@ -56,8 +59,12 @@ def process_data(directory, train_file, output_directory):
 
     df_global.to_csv(output_path, index=True)
     print('Data processed')
+if __name__ == "__main__":
+    import sys
+    directory_train = 'src/data/kaggle/input/train'
+    tte_file = 'src/data/kaggle/input/train.csv'
+    output_directory = 'src/data/processed'
 
-directory = 'src/data/kaggle/input/train'
-train_file = 'src/data/kaggle/input/train.csv'
-output_directory = 'src/data/processed'
-process_data(directory, train_file, output_directory)
+    directory = directory_train
+
+    process_data(directory, tte_file, output_directory)

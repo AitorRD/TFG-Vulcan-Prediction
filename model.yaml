@@ -29,15 +29,15 @@ models:
     params:
       n_estimators: 473
       learning_rate: 0.92
-      loss: 'linear'
+      loss: 'exponential'
       random_state: 42
 
   - name: GBOOST
     module: src.model.train
     function: train_gboost
     params:
-      max_depth: 5
-      n_estimators: 100
+      max_depth: 23
+      n_estimators: 70
       learning_rate: 1.0
       loss: 'squared_error'
       random_state: 42

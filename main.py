@@ -52,13 +52,12 @@ def optimize_model(model_name):
         optimization_module.optimize_rf()
     elif model_name == 'ADABOOST':
         optimization_module.optimize_ab()
+    elif model_name == 'GBOOST':
+        optimization_module.optimize_gboost()
     else:
         print(f"No optimization function available for model {model_name}")
 
 def main():
-    data_file_manual = "src/data/processed/dataframe.csv"
-    data_file_tsfresh = "src/tsfresh/processed/tsfresh_dataframe.csv"
-
     user_input = input("Do you want to process the raw data? (y/n): ").strip().lower()
     if user_input == 'y':
         process_data_mode = input("Enter data processing mode (MANUALFEATURES/TSFRESH): ").strip().upper()
@@ -68,11 +67,14 @@ def main():
     else:
         print("Process skipped")
         process_data_mode = input("Enter data mode that is already processed (MANUALFEATURES/TSFRESH): ").strip().upper()
-  
+
+    data_file_manual_train = "src/data/processed/dataframe.csv"
+    data_file_tsfresh_train = "src/tsfresh/processed/tsfresh_dataframe.csv"
+
     if process_data_mode == 'MANUALFEATURES':
-        data_file = data_file_manual
+        data_file = data_file_manual_train 
     elif process_data_mode == 'TSFRESH':
-        data_file = data_file_tsfresh
+        data_file = data_file_tsfresh_train
     else:
         raise ValueError("Invalid data processing mode. Supported modes are 'MANUALFEATURES' or 'TSFRESH'")
 

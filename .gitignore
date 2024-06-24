@@ -1,5 +1,3 @@
 kaggle
 data/kaggle
-src/data/__pycache__
-src/model/__pycache__
-src/predict/__pycache__
+__pycache__/
