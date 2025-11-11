@@ -2,6 +2,7 @@
 This is the repository of my Degree Final Project on the experimentation, evaluation and prediction of volcanic eruptions using AI.
 
 ## URLS:
+- [Memory](https://drive.google.com/file/d/1PjFkvIIvh29cFnEbjCps4gafXO0FSlsx/view?usp=sharing)
 - [Volcan CSV Kaggle](https://www.kaggle.com/competitions/predict-volcanic-eruptions-ingv-oe)
 - [Mapbox](https://github.com/AitorRD/Volcano-map)
 
